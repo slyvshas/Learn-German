@@ -1,7 +1,3 @@
-Here's a template for a **README** file for your German language learning website:
-
----
-
 # German Language Learning Website
 
 Welcome to the **German Language Learning Website**! This platform is designed to help beginners students improve their German language skills through engaging lessons, interactive exercises, and practical resources.
@@ -33,6 +29,3 @@ Welcome to the **German Language Learning Website**! This platform is designed t
 - **Email**: [karkisasank36@gmail.com]
 
 
-## License
-
-This project is open-source and distributed under the MIT License. See [LICENSE](LICENSE) for more information.
