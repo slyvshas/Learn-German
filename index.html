@@ -3,224 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn German</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f4f4f4, #e0e0e0);
-            color: #333;
-        }
-
-        /* Navbar */
-        .navbar {
-            background: linear-gradient(135deg, #007BFF, #0056b3);
-            color: white;
-            padding: 15px 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: url('https://source.unsplash.com/1600x600/?germany,berlin') no-repeat center center/cover;
-            color: white;
-            text-align: center;
-            padding: 150px 20px;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .hero h1 {
-            font-size: 60px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero p {
-            font-size: 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #FFD700;
-            color: black;
-            padding: 15px 30px;
-            margin-top: 20px;
-            text-decoration: none;
-            font-size: 18px;
-            border-radius: 50px;
-            transition: 0.3s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn:hover {
-            background: #FFC107;
-            transform: translateY(-5px);
-        }
-
-        /* Content Sections */
-        .section {
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .section h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #007BFF;
-        }
-
-        .card-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            width: 300px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .card h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-            color: #007BFF;
-        }
-
-        .card p {
-            font-size: 16px;
-            color: #666;
-        }
-
-        .card i {
-            font-size: 40px;
-            margin-bottom: 15px;
-            color: #007BFF;
-        }
-
-        /* Quiz Section */
-        .quiz-section {
-            background: linear-gradient(135deg, #007BFF, #0056b3);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-        }
-
-        .quiz-section h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        .quiz-section .btn {
-            background: #FFD700;
-            color: black;
-        }
-
-        .quiz-section .btn:hover {
-            background: #FFC107;
-        }
-
-        /* Footer */
-        .footer {
-            background: linear-gradient(135deg, #007BFF, #0056b3);
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 30px;
-        }
-
-        .footer p {
-            margin: 0;
-            font-size: 16px;
-        }
-    </style>
+    <title>Basic German Vocabulary</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <div class="navbar">
-        🇩🇪 Learn German - Easy & Fun
-    </div>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <h1>Welcome to German Learning!</h1>
-        <p>Master German vocabulary, grammar, and pronunciation.</p>
-        <a href="#lessons" class="btn">Start Learning</a>
-    </div>
-
-    <!-- Lessons Section -->
-    <div class="section" id="lessons">
-        <h2>📚 Explore German Lessons</h2>
-        <div class="card-container">
-            <div class="card">
-                <i class="fas fa-book"></i>
-                <h3>Basic Vocabulary</h3>
-                <p>Learn essential German words and phrases.</p>
+    <div class="container">
+        <h1>Learn Basic German Vocabulary</h1>
+        
+        <div class="category-container">
+            <div class="category" id="greetings" onclick="showContent('greetings')">
+                <div class="category-title">Greetings & Introductions</div>
             </div>
-            <div class="card">
-                <i class="fas fa-language"></i>
-                <h3>Grammar Rules</h3>
-                <p>Master German sentence structure.</p>
+            <div class="category" id="numbers" onclick="showContent('numbers')">
+                <div class="category-title">Numbers</div>
             </div>
-            <div class="card">
-                <i class="fas fa-microphone"></i>
-                <h3>Pronunciation</h3>
-                <p>Improve your German speaking skills.</p>
+            <div class="category" id="colors" onclick="showContent('colors')">
+                <div class="category-title">Colors</div>
             </div>
+
+            <!-- Add more categories as needed -->
+        </div>
+
+        <div class="content-container">
+            <!-- Inside content-container, before closing the div -->
+<button class="back-button" onclick="goBack()">Back to Categories</button>
+
+            <div id="greetings-content" class="content">
+                <h2>Greetings & Introductions</h2>
+                <ul>
+                    <li><strong>Hello</strong> – Hallo</li>
+                    <li><strong>Good morning</strong> – Guten Morgen</li>
+                    <li><strong>Good evening</strong> – Guten Abend</li>
+                    <li><strong>Good night</strong> – Gute Nacht</li>
+                    <li><strong>Goodbye</strong> – Auf Wiedersehen</li>
+                    <li><strong>How are you?</strong> – Wie geht’s?</li>
+                    <li><strong>I’m fine, thank you.</strong> – Mir geht’s gut, danke.</li>
+                    <li><strong>What’s your name?</strong> – Wie heißt du?</li>
+                    <li><strong>My name is [name].</strong> – Ich heiße [Name].</li>
+                </ul>
+            </div>
+            <div id="numbers-content" class="content">
+                <h2>Numbers</h2>
+                <ul>
+                    <li><strong>One</strong> – Eins</li>
+                    <li><strong>Two</strong> – Zwei</li>
+                    <li><strong>Three</strong> – Drei</li>
+                    <li><strong>Four</strong> – Vier</li>
+                    <li><strong>Five</strong> – Fünf</li>
+                    <li><strong>Ten</strong> – Zehn</li>
+                    <li><strong>Twenty</strong> – Zwanzig</li>
+                    <li><strong>Hundred</strong> – Hundert</li>
+                    <li><strong>Thousand</strong> – Tausend</li>
+                </ul>
+            </div>
+            <div id="colors-content" class="content">
+                <h2>Colors</h2>
+                <ul>
+                    <li><strong>Red</strong> – Rot</li>
+                    <li><strong>Blue</strong> – Blau</li>
+                    <li><strong>Green</strong> – Grün</li>
+                    <li><strong>Yellow</strong> – Gelb</li>
+                    <li><strong>Black</strong> – Schwarz</li>
+                    <li><strong>White</strong> – Weiß</li>
+                    <li><strong>Pink</strong> – Rosa</li>
+                    <li><strong>Brown</strong> – Braun</li>
+                </ul>
+            </div>
+            <!-- Add more content sections for other categories -->
         </div>
     </div>
 
-    <!-- Quiz Section -->
-    <div class="quiz-section">
-        <h2>🎯 Test Your Knowledge</h2>
-        <p>Take a fun quiz to test your German skills!</p>
-        <a href="quiz.html" class="btn">Take the Quiz</a>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>&copy; 2025 Learn German | Made with ❤️</p>
-    </div>
-
+    <script src="script.js"></script>
 </body>
 </html>
