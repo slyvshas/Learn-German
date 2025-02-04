@@ -6,7 +6,7 @@
     <title>German Learning Quiz</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             text-align: center;
             background-color: #f4f4f4;
             margin: 0;
@@ -17,36 +17,128 @@
             margin: auto;
             background: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
         }
         h1 {
             color: #333;
+            margin-bottom: 20px;
         }
         .question {
-            font-size: 18px;
-            margin-bottom: 15px;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
         .options button {
             display: block;
             width: 100%;
-            margin: 5px 0;
-            padding: 10px;
+            margin: 10px 0;
+            padding: 15px;
             font-size: 16px;
             border: none;
             background: #007BFF;
             color: white;
             cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
+            border-radius: 10px;
+            transition: background 0.3s, transform 0.2s;
         }
         .options button:hover {
             background: #0056b3;
+            transform: scale(1.02);
+        }
+        .options button.correct {
+            background: #28a745 !important;
+        }
+        .options button.incorrect {
+            background: #dc3545 !important;
         }
         #result {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
             margin-top: 20px;
+            color: #333;
+        }
+        #progress {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        #progress-bar {
+            height: 100%;
+            background: #007BFF;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s;
+        }
+        #timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .feedback {
+            font-size: 18px;
+            margin-top: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .feedback.correct {
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+        .restart-btn, .choose-quiz-btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .restart-btn {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+        }
+        .restart-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.35);
+        }
+        .choose-quiz-btn {
+            background: linear-gradient(135deg, #610944, #3c7fc2);
+            color: white;
+        }
+        .choose-quiz-btn:hover {
+            background: linear-gradient(135deg, #5c54cf, #0b0f13);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.35);
+        }
+        .quiz-selection button {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .quiz-selection button:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.35);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -54,52 +146,87 @@
 
 <div class="quiz-container">
     <h1>German Learning Quiz</h1>
-    <p class="question" id="question">Loading...</p>
-    <div class="options" id="options"></div>
-    <p id="result"></p>
+    <div id="quiz-content">
+        <p id="timer">Time Left: <span id="time">10</span>s</p>
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+        <p class="question" id="question">Loading...</p>
+        <div class="options" id="options"></div>
+        <p id="result"></p>
+        <p id="feedback" class="feedback"></p>
+        <button id="restart-btn" class="hidden restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+        <button id="choose-quiz-btn" class="hidden choose-quiz-btn" onclick="chooseNewQuiz()">Choose Another Quiz</button>
+    </div>
+
 </div>
 
+
 <script>
-const questions = [
-    { q: "What is 'apple' in German?", a: "Apfel", options: ["Banane", "Apfel", "Traube", "Zitrone"] },
-    { q: "What is 'house' in German?", a: "Haus", options: ["Tür", "Haus", "Fenster", "Dach"] },
-    { q: "What is 'dog' in German?", a: "Hund", options: ["Hund", "Katze", "Vogel", "Pferd"] },
-    { q: "What is 'car' in German?", a: "Auto", options: ["Bus", "Fahrrad", "Auto", "Motorrad"] },
-    { q: "What is 'water' in German?", a: "Wasser", options: ["Milch", "Saft", "Wasser", "Bier"] },
-    { q: "What is 'friend' in German?", a: "Freund", options: ["Feind", "Mensch", "Freund", "Lehrer"] },
-    { q: "What is 'table' in German?", a: "Tisch", options: ["Stuhl", "Tisch", "Lampe", "Schrank"] },
-    { q: "What is 'sun' in German?", a: "Sonne", options: ["Mond", "Sonne", "Sterne", "Himmel"] },
-    { q: "What is 'father' in German?", a: "Vater", options: ["Onkel", "Bruder", "Vater", "Opa"] },
-    { q: "What is 'mother' in German?", a: "Mutter", options: ["Tante", "Mutter", "Schwester", "Oma"] },
-    { q: "What is 'school' in German?", a: "Schule", options: ["Bibliothek", "Schule", "Universität", "Klasse"] },
-    { q: "What is 'milk' in German?", a: "Milch", options: ["Käse", "Milch", "Joghurt", "Butter"] },
-    { q: "What is 'love' in German?", a: "Liebe", options: ["Hass", "Freude", "Liebe", "Angst"] },
-    { q: "What is 'cat' in German?", a: "Katze", options: ["Katze", "Hund", "Maus", "Vogel"] },
-    { q: "What is 'bread' in German?", a: "Brot", options: ["Reis", "Brot", "Kartoffel", "Fleisch"] },
-    { q: "What is 'night' in German?", a: "Nacht", options: ["Tag", "Nacht", "Abend", "Morgen"] },
-    { q: "What is 'window' in German?", a: "Fenster", options: ["Tür", "Fenster", "Dach", "Treppe"] },
-    { q: "What is 'heart' in German?", a: "Herz", options: ["Leber", "Herz", "Lunge", "Magen"] },
-    { q: "What is 'hand' in German?", a: "Hand", options: ["Fuß", "Kopf", "Hand", "Arm"] },
-    { q: "What is 'eye' in German?", a: "Auge", options: ["Ohr", "Auge", "Mund", "Nase"] },
-    { q: "What is 'money' in German?", a: "Geld", options: ["Gold", "Geld", "Münze", "Scheck"] },
-    { q: "What is 'red' in German?", a: "Rot", options: ["Rot", "Blau", "Grün", "Gelb"] },
-    { q: "What is 'white' in German?", a: "Weiß", options: ["Schwarz", "Weiß", "Grau", "Braun"] },
-    { q: "What is 'child' in German?", a: "Kind", options: ["Erwachsener", "Kind", "Baby", "Jugendlicher"] },
-    { q: "What is 'cloud' in German?", a: "Wolke", options: ["Wolke", "Regen", "Sturm", "Nebel"] },
-    { q: "What is 'happy' in German?", a: "Glücklich", options: ["Glücklich", "Traurig", "Wütend", "Gelassen"] },
-    { q: "What is 'cold' in German?", a: "Kalt", options: ["Heiß", "Warm", "Kalt", "Nass"] },
-    { q: "What is 'train' in German?", a: "Zug", options: ["Auto", "Bus", "Zug", "Flugzeug"] },
-    { q: "What is 'city' in German?", a: "Stadt", options: ["Dorf", "Stadt", "Land", "Berg"] }
-];
+// Quiz data
+const quizzes = {
+    quiz1 : [
+        { q: "What is 'apple' in German?", a: "Apfel", options: ["Banane", "Apfel", "Traube", "Zitrone"] },
+        { q: "What is 'house' in German?", a: "Haus", options: ["Tür", "Haus", "Fenster", "Dach"] },
+        { q: "What is 'dog' in German?", a: "Hund", options: ["Hund", "Katze", "Vogel", "Pferd"] },
+        { q: "What is 'car' in German?", a: "Auto", options: ["Bus", "Fahrrad", "Auto", "Motorrad"] },
+        { q: "What is 'water' in German?", a: "Wasser", options: ["Milch", "Saft", "Wasser", "Bier"] },
+        { q: "What is 'friend' in German?", a: "Freund", options: ["Feind", "Mensch", "Freund", "Lehrer"] },
+        { q: "What is 'table' in German?", a: "Tisch", options: ["Stuhl", "Tisch", "Lampe", "Schrank"] },
+        { q: "What is 'sun' in German?", a: "Sonne", options: ["Mond", "Sonne", "Sterne", "Himmel"] },
+        { q: "What is 'father' in German?", a: "Vater", options: ["Onkel", "Bruder", "Vater", "Opa"] }
+    ],
+    quiz2: [
+        { q: "What is 'table' in German?", a: "Tisch", options: ["Stuhl", "Tisch", "Lampe", "Schrank"] },
+        { q: "What is 'sun' in German?", a: "Sonne", options: ["Mond", "Sonne", "Sterne", "Himmel"] },
+        { q: "What is 'father' in German?", a: "Vater", options: ["Onkel", "Bruder", "Vater", "Opa"] },
+        { q: "What is 'mother' in German?", a: "Mutter", options: ["Tante", "Mutter", "Schwester", "Oma"] },
+        { q: "What is 'school' in German?", a: "Schule", options: ["Bibliothek", "Schule", "Universität", "Klasse"] },
+        { q: "What is 'milk' in German?", a: "Milch", options: ["Käse", "Milch", "Joghurt", "Butter"] },
+        { q: "What is 'love' in German?", a: "Liebe", options: ["Hass", "Freude", "Liebe", "Angst"] },
+        { q: "What is 'cat' in German?", a: "Katze", options: ["Katze", "Hund", "Maus", "Vogel"] },
+        { q: "What is 'bread' in German?", a: "Brot", options: ["Reis", "Brot", "Kartoffel", "Fleisch"] },
+        { q: "What is 'night' in German?", a: "Nacht", options: ["Tag", "Nacht", "Abend", "Morgen"] }
+    ],
+    quiz3: [
+        { q: "What is 'window' in German?", a: "Fenster", options: ["Tür", "Fenster", "Dach", "Treppe"] },
+        { q: "What is 'heart' in German?", a: "Herz", options: ["Leber", "Herz", "Lunge", "Magen"] },
+        { q: "What is 'hand' in German?", a: "Hand", options: ["Fuß", "Kopf", "Hand", "Arm"] },
+        { q: "What is 'eye' in German?", a: "Auge", options: ["Ohr", "Auge", "Mund", "Nase"] },
+        { q: "What is 'money' in German?", a: "Geld", options: ["Gold", "Geld", "Münze", "Scheck"] },
+        { q: "What is 'red' in German?", a: "Rot", options: ["Rot", "Blau", "Grün", "Gelb"] },
+        { q: "What is 'white' in German?", a: "Weiß", options: ["Schwarz", "Weiß", "Grau", "Braun"] },
+        { q: "What is 'child' in German?", a: "Kind", options: ["Erwachsener", "Kind", "Baby", "Jugendlicher"] },
+        { q: "What is 'cloud' in German?", a: "Wolke", options: ["Wolke", "Regen", "Sturm", "Nebel"] },
+        { q: "What is 'happy' in German?", a: "Glücklich", options: ["Glücklich", "Traurig", "Wütend", "Gelassen"] },
+        { q: "What is 'cold' in German?", a: "Kalt", options: ["Heiß", "Warm", "Kalt", "Nass"] },
+        { q: "What is 'train' in German?", a: "Zug", options: ["Auto", "Bus", "Zug", "Flugzeug"] },
+        { q: "What is 'city' in German?", a: "Stadt", options: ["Dorf", "Stadt", "Land", "Berg"] }
+    ]
+};
 
+let selectedQuiz = "quiz1"; // Default quiz
+let questions = quizzes[selectedQuiz];
 let index = 0, score = 0;
+let timeLeft = 10;
+let timer;
 
+// Check if the user has already played the quiz
+if (localStorage.getItem(`${selectedQuiz}_completed`)) {
+    alert("You have already played this quiz. Please choose another quiz.");
+    chooseNewQuiz();
+} else {
+    loadQuestion();
+    startTimer();
+}
+
+// Load the current question
 function loadQuestion() {
     if (index >= questions.length) {
-        document.getElementById("result").innerHTML = `Quiz Completed! 🎉 Your Score: ${score}/${questions.length}`;
-        document.getElementById("options").innerHTML = "";
+        endQuiz();
         return;
     }
+    updateProgressBar();
     let q = questions[index];
     document.getElementById("question").innerText = q.q;
     let optionsHTML = "";
@@ -109,33 +236,112 @@ function loadQuestion() {
     document.getElementById("options").innerHTML = optionsHTML;
 }
 
+// Check the user's answer
 function checkAnswer(answer) {
-    if (answer === questions[index].a) score++;
+    clearInterval(timer); // Stop the timer
+    let correctAnswer = questions[index].a;
+    let buttons = document.querySelectorAll("#options button");
+    buttons.forEach(button => {
+        if (button.innerText === correctAnswer) {
+            button.classList.add("correct");
+        } else if (button.innerText === answer && answer !== correctAnswer) {
+            button.classList.add("incorrect");
+        }
+        button.disabled = true; // Disable buttons after selection
+    });
+
+    if (answer === correctAnswer) {
+        score++;
+        document.getElementById("feedback").innerText = "Correct! 🎉";
+        document.getElementById("feedback").classList.add("correct");
+    } else {
+        document.getElementById("feedback").innerText = `Incorrect! The correct answer is ${correctAnswer}.`;
+        document.getElementById("feedback").classList.add("incorrect");
+    }
+
     index++;
-    loadQuestion();
+    setTimeout(() => {
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("feedback").classList.remove("correct", "incorrect");
+        loadQuestion();
+        startTimer();
+    }, 1500); // Wait 1.5 seconds before loading the next question
 }
 
+// Update the progress bar
+function updateProgressBar() {
+    let progress = ((index + 1) / questions.length) * 100;
+    document.getElementById("progress-bar").style.width = `${progress}%`;
+}
+
+// Start the timer for each question
+function startTimer() {
+    timeLeft = 10;
+    document.getElementById("time").innerText = timeLeft;
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("time").innerText = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            checkAnswer(""); // Automatically move to the next question if time runs out
+        }
+    }, 1000);
+}
+
+// End the quiz
+function endQuiz() {
+    clearInterval(timer);
+    document.getElementById("result").innerHTML = `Quiz Completed! 🎉 Your Score: ${score}/${questions.length}`;
+    document.getElementById("options").innerHTML = "";
+    document.getElementById("restart-btn").classList.remove("hidden");
+    document.getElementById("choose-quiz-btn").classList.remove("hidden");
+    localStorage.setItem(`${selectedQuiz}_completed`, true); // Mark quiz as completed
+}
+
+// Restart the quiz
 function restartQuiz() {
     index = 0;
     score = 0;
     document.getElementById("result").innerHTML = "";
-    document.querySelectorAll(".restart-btn").forEach(btn => btn.classList.add("hidden"));
+    document.getElementById("restart-btn").classList.add("hidden");
+    document.getElementById("choose-quiz-btn").classList.add("hidden");
     loadQuestion();
+    startTimer();
 }
 
+// Allow the user to choose a new quiz
 function chooseNewQuiz() {
     let quizOptions = Object.keys(quizzes).map(quiz => `<button onclick="startQuiz('${quiz}')">${quiz}</button>`).join("");
-    document.getElementById("quiz-content").innerHTML = `<h2>Choose a Quiz:</h2>${quizOptions}`;
+    document.getElementById("quiz-content").innerHTML = `
+        <h2>Choose a Quiz:</h2>
+        <div class="quiz-selection">${quizOptions}</div>
+    `;
     document.getElementById("result").innerHTML = "";
-    document.querySelectorAll(".restart-btn").forEach(btn => btn.classList.add("hidden"));
+    document.getElementById("restart-btn").classList.add("hidden");
+    document.getElementById("choose-quiz-btn").classList.add("hidden");
 }
 
+// Start a new quiz
 function startQuiz(quizName) {
     selectedQuiz = quizName;
     questions = quizzes[selectedQuiz];
-    restartQuiz();
+    index = 0;
+    score = 0;
+    document.getElementById("quiz-content").innerHTML = `
+        <p id="timer">Time Left: <span id="time">10</span>s</p>
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+        <p class="question" id="question">Loading...</p>
+        <div class="options" id="options"></div>
+        <p id="result"></p>
+        <p id="feedback" class="feedback"></p>
+        <button id="restart-btn" class="hidden restart-btn" onclick="restartQuiz()">Restart Quiz</button>
+        <button id="choose-quiz-btn" class="hidden choose-quiz-btn" onclick="chooseNewQuiz()">Choose Another Quiz</button>
+    `;
+    loadQuestion();
+    startTimer();
 }
-window.onload = loadQuestion;
 </script>
 
 </body>
